@@ -348,7 +348,7 @@ export function AssistantPage() {
                 value={message}
                 onChange={handleMessageChange}
                 onKeyDown={handleKeyDown}
-                placeholder="Ex.: Quero divulgar minha clínica em Goiânia para mulheres de 30 a 50 anos, com até R$ 5.000…"
+                placeholder="Ex.: Quero divulgar minha clínica para mulheres de 30 a 50 anos, com até R$ 5.000…"
                 maxLength={2000}
                 rows={2}
                 disabled={sending || session.status === 'completed'}
