@@ -29,6 +29,10 @@ import type { AssistantContext, SessionView } from '../types';
 import { CampaignSummary } from './CampaignSummary';
 import { ChannelComparison } from './ChannelComparison';
 import { LocationSelector } from './LocationSelector';
+import {
+  shouldShowChannelComparison,
+  shouldShowLocationSelector,
+} from './assistant-flow';
 
 const platformUrl = import.meta.env.VITE_UMMIX_WEB_URL || 'http://localhost:3000';
 const enabled = import.meta.env.VITE_CAMPAIGN_ASSISTANT_ENABLED !== 'false';
@@ -301,8 +305,7 @@ export function AssistantPage() {
             </div>
           )}
 
-          {session.missingFields.includes('location') &&
-            (session.state.locationOptions?.length ?? 0) > 0 && (
+          {shouldShowLocationSelector(session) && (
               <LocationSelector
                 options={session.state.locationOptions ?? []}
                 selectedIds={selectedLocationIds}
@@ -312,7 +315,7 @@ export function AssistantPage() {
               />
             )}
 
-          {session.state.comparison && (
+          {shouldShowChannelComparison(session) && session.state.comparison && (
             <ChannelComparison
               comparison={session.state.comparison}
               selectedChannel={session.state.selectedChannel}

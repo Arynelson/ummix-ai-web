@@ -59,6 +59,12 @@ export function CampaignSummary({ state }: { state: CampaignState }) {
           <p>{state.audienceDescription}</p>
         </div>
       )}
+      {(state.audienceFilters?.length ?? 0) > 0 && (
+        <div className="audience-note">
+          <small>Filtros reconhecidos</small>
+          <p>{formatAudienceFilters(state.audienceFilters ?? [])}</p>
+        </div>
+      )}
     </section>
   );
 }
@@ -88,4 +94,18 @@ function formatDate(value: string | null): string | null {
   return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(
     new Date(`${value}T00:00:00Z`),
   );
+}
+
+function formatAudienceFilters(
+  filters: NonNullable<CampaignState['audienceFilters']>,
+): string {
+  const groups = new Map<string, string[]>();
+  for (const filter of filters) {
+    const options = groups.get(filter.question) ?? [];
+    if (!options.includes(filter.option)) options.push(filter.option);
+    groups.set(filter.question, options);
+  }
+  return [...groups.entries()]
+    .map(([question, options]) => `${question}: ${options.join(', ')}`)
+    .join(' · ');
 }
