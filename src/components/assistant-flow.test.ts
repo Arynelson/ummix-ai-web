@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assistantInputPlaceholder,
   shouldShowChannelComparison,
   shouldShowLocationSelector,
 } from './assistant-flow';
@@ -43,5 +44,25 @@ describe('assistant flow card gating', () => {
         state,
       }),
     ).toBe(true);
+  });
+
+  it.each([
+    ['objective', 'Ex.: Quero fortalecer minha marca'],
+    ['audienceDescription', 'Ex.: Empresários e profissionais liberais interessados em tecnologia'],
+    ['maximumBudget', 'Ex.: 5000'],
+    ['desiredStartDate', 'Ex.: O mais rápido possível'],
+    ['selectedChannel', 'Escolha Rádio ou TV na comparação acima'],
+  ])('uses a contextual placeholder for %s', (field, expected) => {
+    expect(assistantInputPlaceholder({
+      missingFields: [field],
+      state,
+    })).toBe(expected);
+  });
+
+  it('asks for a brand name in the product placeholder after brand recognition', () => {
+    expect(assistantInputPlaceholder({
+      missingFields: ['productService'],
+      state: { ...state, objective: 'reconhecimento_marca' },
+    })).toBe('Ex.: Marca Ummix');
   });
 });

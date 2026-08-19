@@ -24,3 +24,30 @@ export function shouldShowChannelComparison(
     Boolean(session.state.comparison)
   );
 }
+
+export function assistantInputPlaceholder(
+  session: Pick<SessionView, 'missingFields' | 'state'>,
+): string {
+  switch (session.missingFields[0]) {
+    case 'objective':
+      return 'Ex.: Quero fortalecer minha marca';
+    case 'location':
+      return 'Selecione e confirme uma ou mais praças acima';
+    case 'productService':
+      return session.state.objective === 'reconhecimento_marca'
+        ? 'Ex.: Marca Ummix'
+        : 'Ex.: Consultoria empresarial';
+    case 'audienceDescription':
+      return 'Ex.: Empresários e profissionais liberais interessados em tecnologia';
+    case 'maximumBudget':
+      return 'Ex.: 5000';
+    case 'desiredStartDate':
+      return 'Ex.: O mais rápido possível';
+    case 'selectedChannel':
+      return 'Escolha Rádio ou TV na comparação acima';
+    case 'category':
+      return 'Atualize a atividade comercial no cadastro para continuar';
+    default:
+      return 'Digite sua resposta';
+  }
+}

@@ -30,6 +30,7 @@ import { CampaignSummary } from './CampaignSummary';
 import { ChannelComparison } from './ChannelComparison';
 import { LocationSelector } from './LocationSelector';
 import {
+  assistantInputPlaceholder,
   shouldShowChannelComparison,
   shouldShowLocationSelector,
 } from './assistant-flow';
@@ -348,7 +349,7 @@ export function AssistantPage() {
                 value={message}
                 onChange={handleMessageChange}
                 onKeyDown={handleKeyDown}
-                placeholder="Ex.: Quero divulgar minha clínica para mulheres de 30 a 50 anos, com até R$ 5.000…"
+                placeholder={assistantInputPlaceholder(session)}
                 maxLength={2000}
                 rows={2}
                 disabled={sending || session.status === 'completed'}
