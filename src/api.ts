@@ -61,6 +61,11 @@ export const assistantApi = {
       method: 'POST',
       body: JSON.stringify({ cityIds }),
     }),
+  confirmAudienceClarification: (id: string, alternativeId: string) =>
+    request<SessionView>(`/sessions/${id}/audience/clarification`, {
+      method: 'POST',
+      body: JSON.stringify({ alternativeId }),
+    }),
   finalize: (id: string) =>
     request<{ campaignId: string; wizardStep: 4; reviewUrl: string }>(
       `/sessions/${id}/finalize`,

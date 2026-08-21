@@ -26,11 +26,13 @@ import {
   getAccessToken,
 } from '../api';
 import type { AssistantContext, SessionView } from '../types';
+import { AudienceClarification } from './AudienceClarification';
 import { CampaignSummary } from './CampaignSummary';
 import { ChannelComparison } from './ChannelComparison';
 import { LocationSelector } from './LocationSelector';
 import {
   assistantInputPlaceholder,
+  shouldShowAudienceClarification,
   shouldShowChannelComparison,
   shouldShowLocationSelector,
 } from './assistant-flow';
@@ -196,6 +198,20 @@ export function AssistantPage() {
     }
   }
 
+  async function confirmAudienceClarification(alternativeId: string) {
+    if (!session || sending) return;
+    setSending(true);
+    setError(null);
+    try {
+      const updated = await assistantApi.confirmAudienceClarification(session.id, alternativeId);
+      setSession(updated);
+    } catch (caught) {
+      handleApiError(caught);
+    } finally {
+      setSending(false);
+    }
+  }
+
   async function startOver() {
     if (session) {
       await assistantApi.deleteSession(session.id).catch(() => undefined);
@@ -307,14 +323,22 @@ export function AssistantPage() {
           )}
 
           {shouldShowLocationSelector(session) && (
-              <LocationSelector
-                options={session.state.locationOptions ?? []}
-                selectedIds={selectedLocationIds}
-                disabled={sending}
-                onToggle={toggleLocation}
-                onConfirm={() => void confirmLocations()}
-              />
-            )}
+            <LocationSelector
+              options={session.state.locationOptions ?? []}
+              selectedIds={selectedLocationIds}
+              disabled={sending}
+              onToggle={toggleLocation}
+              onConfirm={() => void confirmLocations()}
+            />
+          )}
+
+          {shouldShowAudienceClarification(session) && session.state.audienceClarification && (
+            <AudienceClarification
+              clarification={session.state.audienceClarification}
+              disabled={sending}
+              onSelect={(alternativeId) => void confirmAudienceClarification(alternativeId)}
+            />
+          )}
 
           {shouldShowChannelComparison(session) && session.state.comparison && (
             <ChannelComparison

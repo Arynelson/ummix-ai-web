@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   assistantInputPlaceholder,
+  shouldShowAudienceClarification,
   shouldShowChannelComparison,
   shouldShowLocationSelector,
 } from './assistant-flow';
@@ -64,5 +65,36 @@ describe('assistant flow card gating', () => {
       missingFields: ['productService'],
       state: { ...state, objective: 'reconhecimento_marca' },
     })).toBe('Ex.: Marca Ummix');
+  });
+
+  it('shows exactly the audience clarification when it is the current field', () => {
+    const clarification = {
+      prompt: 'Escolha o público mais adequado',
+      options: [
+        { id: 'audience-a', label: 'Opção A', filters: [] },
+        { id: 'audience-b', label: 'Opção B', filters: [] },
+      ],
+    };
+    expect(
+      shouldShowAudienceClarification({
+        missingFields: ['audienceConfirmation'],
+        state: { ...state, audienceClarification: clarification },
+      }),
+    ).toBe(true);
+    expect(
+      shouldShowAudienceClarification({
+        missingFields: ['audienceDescription', 'audienceConfirmation'],
+        state: { ...state, audienceClarification: clarification },
+      }),
+    ).toBe(false);
+  });
+
+  it('uses a non-editable placeholder while audience alternatives are shown', () => {
+    expect(
+      assistantInputPlaceholder({
+        missingFields: ['audienceConfirmation'],
+        state,
+      }),
+    ).toBe('Escolha uma das opções de público acima');
   });
 });

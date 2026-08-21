@@ -16,6 +16,15 @@ export function shouldShowLocationSelector(
   );
 }
 
+export function shouldShowAudienceClarification(
+  session: Pick<SessionView, 'missingFields' | 'state'>,
+): boolean {
+  return (
+    isCurrentAssistantField(session.missingFields, 'audienceConfirmation') &&
+    (session.state.audienceClarification?.options.length ?? 0) === 2
+  );
+}
+
 export function shouldShowChannelComparison(
   session: Pick<SessionView, 'missingFields' | 'state'>,
 ): boolean {
@@ -33,6 +42,8 @@ export function assistantInputPlaceholder(
       return 'Ex.: Quero fortalecer minha marca';
     case 'location':
       return 'Selecione e confirme uma ou mais praças acima';
+    case 'audienceConfirmation':
+      return 'Escolha uma das opções de público acima';
     case 'productService':
       return session.state.objective === 'reconhecimento_marca'
         ? 'Ex.: Marca Ummix'

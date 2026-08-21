@@ -2,6 +2,8 @@ export type {
   AssistantCampaignState as CampaignState,
   AssistantChatMessage as ChatMessage,
   AssistantClient as Client,
+  AssistantAudienceClarification,
+  AssistantAudienceClarificationOption,
   AssistantContext,
   AssistantMediaChannel as MediaChannel,
   AssistantMediaPlan as MediaPlan,
